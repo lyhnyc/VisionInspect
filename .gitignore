@@ -1,0 +1,18 @@
+# build
+build/
+bin/
+obj/
+out/
+
+# IDE
+.vs/
+.idea/
+*.user
+
+# 数据与模型（不入库，太大）
+data/
+models/*.onnx
+*.mp4
+
+# 本地秘密
+*.env

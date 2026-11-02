@@ -1,0 +1,44 @@
+name: ci
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+
+jobs:
+  cpp-core:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore vcpkg deps (opencv4 eigen3 gtest benchmark)
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgDirectory: ${{ github.workspace }}/vcpkg
+          vcpkgGitCommitId: '你的vcpkg提交ID'   # 首次本地 run-vcpkg 后填入固定值，保证可复现
+          runVcpkgInstall: true
+        env:
+          VCPKG_DEFAULT_TRIPLET: x64-windows
+
+      - name: Configure
+        run: cmake -S visioncore -B build -G "Visual Studio 17 2022" -A x64
+             -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Unit tests
+        run: ctest --test-dir build -C Release --output-on-failure
+
+  csharp-app:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build WPF app
+        run: dotnet build visionapp -c Release
+      # 注：运行时需 visioncore.dll 放在 visionapp 输出目录（D1 本地脚本做 copy，CI 可加 artifact 传递）

@@ -1,0 +1,24 @@
+# WPF 项目文件（.NET 8）
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
+  </ItemGroup>
+
+  <!-- 构建后把 visioncore.dll 拷到输出目录（本地开发路径，按需修改） -->
+  <Target Name="CopyNative" AfterTargets="Build">
+    <Copy SourceFiles="..\build\Release\visioncore.dll"
+          DestinationFolder="$(OutDir)"
+          Condition="Exists('..\build\Release\visioncore.dll')" />
+  </Target>
+
+</Project>

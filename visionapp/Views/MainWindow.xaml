@@ -1,0 +1,45 @@
+// 主窗口骨架：图像显示 + 结果列表 + 状态栏（MVVM 绑定）
+<Window x:Class="VisionApp.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="IC 封装视觉检测系统" Height="720" Width="1280"
+        Background="#0B1F4E">
+    <Grid Margin="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="320"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 图像显示区（WriteableBitmap 渲染 + 缺陷框叠加） -->
+        <Border Grid.Column="0" BorderBrush="#3E64B8" BorderThickness="1" CornerRadius="6">
+            <Image x:Name="ImgHost" Stretch="Uniform"/>
+        </Border>
+
+        <!-- 右侧面板 -->
+        <DockPanel Grid.Column="1" Margin="8,0,0,0">
+            <TextBlock DockPanel.Dock="Top" Text="检测控制" Foreground="#FF8A1E"
+                       FontSize="16" FontWeight="Bold" Margin="0,0,0,8"/>
+            <Button DockPanel.Dock="Top" Content="连接相机"  Height="34"
+                    Command="{Binding ConnectCameraCmd}"/>
+            <Button DockPanel.Dock="Top" Content="单次触发"  Height="34" Margin="0,6,0,0"
+                    Command="{Binding TriggerOnceCmd}"/>
+            <Button DockPanel.Dock="Top" Content="连续运行"  Height="34" Margin="0,6,0,0"
+                    Command="{Binding ToggleContinuousCmd}"/>
+            <Button DockPanel.Dock="Top" Content="停止"      Height="34" Margin="0,6,0,0"
+                    Command="{Binding StopCmd}"/>
+
+            <TextBlock DockPanel.Dock="Top" Text="检测结果" Foreground="#FF8A1E"
+                       FontSize="16" FontWeight="Bold" Margin="0,16,0,8"/>
+            <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Results}"
+                      AutoGenerateColumns="False" IsReadOnly="True"
+                      Background="#12336E" Foreground="White" RowHeight="24">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="时间" Binding="{Binding TimeStr}" Width="80"/>
+                    <DataGridTextColumn Header="判定" Binding="{Binding Verdict}" Width="60"/>
+                    <DataGridTextColumn Header="缺陷数" Binding="{Binding DefectCount}" Width="60"/>
+                    <DataGridTextColumn Header="耗时ms" Binding="{Binding ElapsedMs}" Width="70"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+    </Grid>
+</Window>
