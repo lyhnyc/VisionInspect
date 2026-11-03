@@ -1,4 +1,4 @@
-// image_utils.cpp —— 图像工具函数（光场校正等）
+﻿// image_utils.cpp —— 图像工具函数（光场校正等）
 #include "common/image_utils.h"
 #include <opencv2/imgproc.hpp>
 

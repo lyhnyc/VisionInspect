@@ -1,4 +1,4 @@
-// mark_inspector.cpp —— 标记检测（D4 完成实现；当前为可编译占位）
+﻿// mark_inspector.cpp —— 标记检测（D4 完成实现；当前为可编译占位）
 #include "ocr/mark_inspector.h"
 
 namespace vc {

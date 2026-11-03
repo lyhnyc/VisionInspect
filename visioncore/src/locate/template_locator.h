@@ -1,4 +1,4 @@
-// 剩余 C++ 头文件骨架占位（D3/D4 填充实现）
+﻿// 剩余 C++ 头文件骨架占位（D3/D4 填充实现）
 #pragma once
 #include <opencv2/core.hpp>
 

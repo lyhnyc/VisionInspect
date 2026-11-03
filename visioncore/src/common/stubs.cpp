@@ -1,4 +1,4 @@
-// 模块占位实现（D2/D3 逐个填充，保持 CI 随时可编译可测试）
+﻿// 模块占位实现（D2/D3 逐个填充，保持 CI 随时可编译可测试）
 #include "locate/template_locator.h"
 #include "measure/caliper.h"
 #include "ocr/mark_inspector.h"

@@ -1,4 +1,4 @@
-// test_pose_math.cpp —— 位姿/几何工具（Eigen）验证
+﻿// test_pose_math.cpp —— 位姿/几何工具（Eigen）验证
 #include <gtest/gtest.h>
 #include <opencv2/core.hpp>
 #include "common/pose_math.h"

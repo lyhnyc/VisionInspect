@@ -1,4 +1,4 @@
-# 开发日志（工作日志模板 + 记录）
+﻿# 开发日志（工作日志模板 + 记录）
 
 > 每天收工前 10 分钟写当日条目。格式固定，面面俱到不如真实具体。
 > 这些记录是面试细节的直接弹药库，也是"真做过"的第一手证据。
@@ -70,3 +70,35 @@
 
 ### 明日计划
 - OpenCV 预编译包部署 + CMake 配置 + vc_tests 三测试跑绿
+
+
+## D2 2026-11-03 C++ 工程编译打通 + 单元测试全绿
+
+### 今天做了什么
+- OpenCV 4.10.0 预编译包下载并解压到 C:\opencv（174MB 官方包，直连下载）
+- vcpkg 补齐 gtest/eigen3（工具链 cmake/ninja/7zip 缓存手动预置后安装成功）
+- CMake 从零配置打通：Ninja + vcvars64 + vcpkg toolchain，OpenCV 4.10.0 + gtest 全识别
+- visioncore 编译通过（interop/blob_detector/caliper/pose_math/image_utils 全部参与构建）
+- gtest 7 个测试全部通过（Blob 2 + Caliper 3 + PoseMath 2）
+- C# visionapp 编译绿（昨日已完成），今日修 P/Invoke long 句柄类型
+
+### 遇到的问题
+| 问题 | 现象 | 排查 | 解决 |
+|---|---|---|---|
+| MSVC 中文注释编译错 | C2001/C2143 满屏，代码肉眼无错 | UTF-8 无 BOM 被 MSVC 按 GBK 解析，中文字节吞掉后续引号 | 全部源文件加 UTF-8 BOM |
+| RotatedStrip 测量恒差 1.03px | 直带 <0.1px 但 30° 旋转带稳定偏 1px | 用 Python 逐行仿真算法：算法本身无偏（-0.05px）→ 偏差来自测试图 fillPoly 光栅化锯齿 | 测试图改用解析公式合成（1px 线性渐变边缘），误差降到 0.05px 级 |
+| 测试搜索线方向错误 | RotatedStrip 直接返回 false | 搜索线沿带长轴 30°（与带平行测不到宽度），应沿法向 120° | 修正搜索线方向 |
+| VS 生成器找不到实例 | cmake -G "Visual Studio 17 2022" 报 instance not known | LTSC 17.8 的实例未注册进 VS Installer 元数据 | 改用 vcvars64 + Ninja 生成器，完全绕开 |
+| benchmark 头文件缺失 | C1083 benchmark/benchmark.h | vcpkg 只装了 gtest/eigen3 | vc_bench 暂缓到 D5 接入 benchmark 时启用 |
+| gtest_discover_tests 构建期跑 exe | 缺 OpenCV dll 报错 | 该命令在 build 时就要执行被测程序 | 去掉 discover，直接 ctest/手动跑 |
+
+### 数据记录
+- 干净构建（配置+编译）：4 秒（Ninja -j12）
+- 全部测试耗时：88ms（7 tests）
+- 卡尺亚像素精度：垂直带 <0.1px、30° 旋转带 ~0.05px（解析合成图）
+- Blob 检测：已知缺陷检出+正确分类，无缺陷场景零误报
+- OpenCV 库路径：C:/opencv/opencv/build/x64/vc16/lib（4.10.0 预编译）
+
+### 明日计划
+- D3 数学日：matchTemplate 模板定位 + 抛物线亚像素、棋盘格标定、卡尺接入定位结果
+- benchmark 三方对比表（IPP 开关）

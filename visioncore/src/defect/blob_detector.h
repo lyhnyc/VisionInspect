@@ -1,4 +1,4 @@
-// blob_detector.h —— BLOB 缺陷检测（连通域）
+﻿// blob_detector.h —— BLOB 缺陷检测（连通域）
 #pragma once
 #include <opencv2/core.hpp>
 #include <vector>

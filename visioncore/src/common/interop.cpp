@@ -1,10 +1,11 @@
-// interop.cpp —— C ABI 导出实现（所有对外函数只在此文件）
+﻿// interop.cpp —— C ABI 导出实现（所有对外函数只在此文件）
 // 内部实现类 VisionEngine 不跨边界，句柄即其指针的整数形式
 #include "interop.h"
 #include "defect/blob_detector.h"
 #include "locate/template_locator.h"
 #include "measure/caliper.h"
 #include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 #include <memory>
 #include <mutex>
 
@@ -15,6 +16,7 @@ struct VisionEngine {
     cv::Mat templ;
     vc::BlobDetector blob;
     vc::TemplateLocator locator;
+    vc::Caliper caliper;
     std::mutex mtx;                      // 同一句柄串行化，C# 侧亦可并行多句柄
 };
 

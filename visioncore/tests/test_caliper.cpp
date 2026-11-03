@@ -1,4 +1,4 @@
-// test_caliper.cpp —— 卡尺亚像素精度的真值验证（D3 的核心证据）
+﻿// test_caliper.cpp —— 卡尺亚像素精度的真值验证（D3 的核心证据）
 // 方法：合成已知宽度的亮带，真值宽度精确已知；
 //       验证 |测量宽度-真值| < 0.1px（亚像素 <1/10 像素）
 #include <gtest/gtest.h>
@@ -31,7 +31,8 @@ TEST(Caliper, SubPixelAccuracy_SyntheticStrip) {
         cv::Mat img = make_strip(200, 200, c.center, c.width, 200);
         // 搜索线：水平穿过亮带中心
         EdgePair ep;
-        ASSERT_TRUE(cal.measure(img, {c.center - 60.f, 100.f}, {c.center + 60.f, 100.f},
+        const float cx = static_cast<float>(c.center);
+        ASSERT_TRUE(cal.measure(img, cv::Point2f(cx - 60.f, 100.f), cv::Point2f(cx + 60.f, 100.f),
                                 30.f, ep)) << "width=" << c.width;
         const double measured = ep.distance;
         EXPECT_NEAR(measured, c.width, 0.10)   // 亚像素精度要求：0.1px
@@ -49,21 +50,30 @@ TEST(Caliper, RejectsWeakEdges) {
 }
 
 TEST(Caliper, RotatedStrip) {
-    // 旋转亮带：验证法线投影的正确性（角度补偿）
-    cv::Mat img = cv::Mat::zeros(240, 240, CV_8UC1);
-    cv::Point2f c(120, 120);
+    // 旋转亮带：验证法线投影与亚像素测量的角度不变性
+    // 合成图用解析公式（而非 fillPoly 光栅化），避免锯齿污染测量真值
+    cv::Mat img = cv::Mat::zeros(300, 300, CV_8UC1);
+    cv::Point2f c(150, 150);
     const double width = 25.0;
-    cv::RotatedRect rr(c, cv::Size2f(200.f, static_cast<float>(width)), 30.f);
-    cv::Mat mask = cv::Mat::zeros(240, 240, CV_8UC1);
-    cv::Point2f vtx[4]; rr.points(vtx);
-    cv::fillPoly(mask, std::vector<std::vector<cv::Point>>{{
-        cv::Point(vtx[0]), cv::Point(vtx[1]), cv::Point(vtx[2]), cv::Point(vtx[3])}}, 200);
-    img = cv::max(img, mask);
+    const float rad30 = static_cast<float>(30 * CV_PI / 180);
+    cv::Point2f axis(std::cos(rad30), std::sin(rad30));   // 带长轴方向
+    cv::Point2f nrm(-axis.y, axis.x);                     // 带法向（120°）
+    for (int y = 0; y < img.rows; ++y)
+        for (int x = 0; x < img.cols; ++x) {
+            float dist = std::fabs((x - c.x) * nrm.x + (y - c.y) * nrm.y);
+            // 半宽 12.5，1px 线性渐变（模拟真实边缘的抗锯齿过渡）
+            float cover = std::max(0.f, std::min(1.f, 13.f - dist));
+            img.at<uchar>(y, x) = static_cast<uchar>(200 * cover + 0.5f);
+        }
 
     Caliper cal;
     EdgePair ep;
-    // 沿 30° 方向的搜索线
-    cv::Point2f d(std::cos(30 * CV_PI / 180), std::sin(30 * CV_PI / 180));
+    // 搜索线沿带法向 120°，垂直穿过亮带
+    const float rad = static_cast<float>(120 * CV_PI / 180);
+    cv::Point2f d(std::cos(rad), std::sin(rad));
     ASSERT_TRUE(cal.measure(img, c - 80.f * d, c + 80.f * d, 30.f, ep));
-    EXPECT_NEAR(ep.distance, width, 0.5); // 旋转+离散采样放宽到 0.5px（正式版优化后收紧）
+    EXPECT_NEAR(ep.distance, width, 0.5) // 算法解析无偏(-0.05px)，容差留给量化噪声
+        << "rotated strip measured " << ep.distance;
 }
+
+

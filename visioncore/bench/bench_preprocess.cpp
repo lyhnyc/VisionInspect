@@ -1,4 +1,4 @@
-// bench_preprocess.cpp —— 光场校正/Gaussian 的 OpenCV vs IPP 对比骨架（D5 填充数据）
+﻿// bench_preprocess.cpp —— 光场校正/Gaussian 的 OpenCV vs IPP 对比骨架（D5 填充数据）
 #include <benchmark/benchmark.h>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/core.hpp>

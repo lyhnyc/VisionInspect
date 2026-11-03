@@ -1,4 +1,4 @@
-// mark_inspector.h —— 标记检测（OCR + DMC + 质量判定）
+﻿// mark_inspector.h —— 标记检测（OCR + DMC + 质量判定）
 #pragma once
 #include <opencv2/core.hpp>
 #include <string>

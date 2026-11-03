@@ -1,4 +1,4 @@
-// bench_blob.cpp —— BLOB 检测 benchmark（D5 填充数据）
+﻿// bench_blob.cpp —— BLOB 检测 benchmark（D5 填充数据）
 #include <benchmark/benchmark.h>
 #include <opencv2/imgproc.hpp>
 #include "defect/blob_detector.h"

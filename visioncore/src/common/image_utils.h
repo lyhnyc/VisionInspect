@@ -1,4 +1,4 @@
-// image_utils.h —— 图像工具函数
+﻿// image_utils.h —— 图像工具函数
 #pragma once
 #include <opencv2/core.hpp>
 

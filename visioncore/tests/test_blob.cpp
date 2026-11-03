@@ -1,4 +1,4 @@
-// test_blob.cpp —— BLOB 缺陷检测的真值验证（合成缺陷图）
+﻿// test_blob.cpp —— BLOB 缺陷检测的真值验证（合成缺陷图）
 #include <gtest/gtest.h>
 #include <opencv2/imgproc.hpp>
 #include "defect/blob_detector.h"

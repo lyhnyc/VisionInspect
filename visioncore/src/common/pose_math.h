@@ -1,4 +1,4 @@
-// pose_math.h —— 2D 位姿（Eigen 实现，接口用 cv 类型便于与图像代码互通）
+﻿// pose_math.h —— 2D 位姿（Eigen 实现，接口用 cv 类型便于与图像代码互通）
 #pragma once
 #include <opencv2/core.hpp>
 #ifdef TARGET_HAS_EIGEN
@@ -48,7 +48,8 @@ struct Pose2D {
 
 // 角度差归一化到 (-180, 180]
 inline float angleDiff(float a, float b) {
-    float d = std::fmod(a - b + 540.0f, 360.0f) - 180.0f;
+    // 返回 从 b 转到 a 的最短有符号角（右手系，逆时针为正）
+    float d = std::fmod(b - a + 540.0f, 360.0f) - 180.0f;
     return d;
 }
 

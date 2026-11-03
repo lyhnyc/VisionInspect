@@ -1,4 +1,4 @@
-// blob_detector.cpp —— BLOB 缺陷检测实现
+﻿// blob_detector.cpp —— BLOB 缺陷检测实现
 #include "blob_detector.h"
 #include <opencv2/imgproc.hpp>
 

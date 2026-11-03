@@ -1,4 +1,4 @@
-// caliper.h —— 卡尺亚像素边缘测量
+﻿// caliper.h —— 卡尺亚像素边缘测量
 #pragma once
 #include <opencv2/core.hpp>
 
