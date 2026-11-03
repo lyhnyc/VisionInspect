@@ -56,7 +56,7 @@ struct VcMeasureResult {       // 卡尺测量结果
 #pragma pack(pop)
 
 // ---------- 生命周期 ----------
-VC_API int  VC_Create(int handle_out_dummy);          // 见 interop.cpp：返回句柄
+VC_API long long VC_Create(int handle_out_dummy);          // 见 interop.cpp：返回句柄
 VC_API void VC_Destroy(long long handle);
 
 // ---------- 图像传入（调用方持有内存，库内只读使用） ----------

@@ -1,4 +1,3 @@
-// 主窗口骨架：图像显示 + 结果列表 + 状态栏（MVVM 绑定）
 <Window x:Class="VisionApp.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

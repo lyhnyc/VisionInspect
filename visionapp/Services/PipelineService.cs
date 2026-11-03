@@ -64,12 +64,18 @@ namespace VisionApp.Services
         public static System.Windows.Media.Imaging.BitmapSource ToBitmapSource(
             this Frame f, IEnumerable<DefectBox> defects)
         {
-            var bs = System.Windows.Media.Imaging.BitmapSource.Create(
-                f.Width, f.Height, 96, 96,
-                System.Windows.Media.PixelFormats.Bgr24, null,
-                f.Data, f.Stride * f.Height, f.Stride);
-            bs.Freeze();
-            return bs;
+            var handle = System.Runtime.InteropServices.GCHandle.Alloc(
+                f.Data, System.Runtime.InteropServices.GCHandleType.Pinned);
+            try
+            {
+                var bs = System.Windows.Media.Imaging.BitmapSource.Create(
+                    f.Width, f.Height, 96, 96,
+                    System.Windows.Media.PixelFormats.Bgr24, null,
+                    handle.AddrOfPinnedObject(), f.Stride * f.Height, f.Stride);
+                bs.Freeze();
+                return bs;
+            }
+            finally { handle.Free(); }
         }
     }
 }

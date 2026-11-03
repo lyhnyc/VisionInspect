@@ -53,26 +53,26 @@ namespace VisionApp.NativeInterop
     {
         const string Dll = "visioncore";
 
-        [DllImport(Dll)] public static extern int VC_Create(int dummy);
-        [DllImport(Dll)] public static extern void VC_Destroy(long long handle);
+        [DllImport(Dll)] public static extern long VC_Create(int dummy);
+        [DllImport(Dll)] public static extern void VC_Destroy(long handle);
 
         [DllImport(Dll)]
-        public static extern int VC_LoadImage(long long handle,
+        public static extern int VC_LoadImage(long handle,
             byte[] data, int w, int h, int stride, int channels);
 
         [DllImport(Dll)]
-        public static extern int VC_SetTemplate(long long handle, byte[] tpl, int w, int h);
+        public static extern int VC_SetTemplate(long handle, byte[] tpl, int w, int h);
 
         [DllImport(Dll)]
-        public static extern int VC_Locate(long long handle, out VcLocateResult result);
+        public static extern int VC_Locate(long handle, out VcLocateResult result);
 
         [DllImport(Dll)]
-        public static extern int VC_DetectDefects(long long handle,
+        public static extern int VC_DetectDefects(long handle,
             float minArea, float maxArea,
             [Out] VcBlobResult[] outBuf, int maxCount, out int outCount);
 
         [DllImport(Dll)]
-        public static extern int VC_MeasureCaliper(long long handle,
+        public static extern int VC_MeasureCaliper(long handle,
             float p0x, float p0y, float p1x, float p1y, float width,
             out VcMeasureResult result);
 
@@ -90,7 +90,7 @@ namespace VisionApp.NativeInterop
 
         public VisionEngine()
         {
-            int h = Vc.VC_Create(0);
+            long h = Vc.VC_Create(0);
             if (h == 0) throw new InvalidOperationException("VC_Create failed");
             _handle = h;
         }

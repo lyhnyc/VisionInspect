@@ -28,10 +28,10 @@ inline long long H(VisionEngine* e) {
 } // namespace
 
 // 注意：这里用 new/delete 裸指针而非 make_shared，因为句柄语义就是唯一所有权
-VC_API int VC_Create(int) {
-    // 约定：真正签名在 .def/导出表中以 VC_Create 实现；示例返回句柄
+VC_API long long VC_Create(int) {
+    // D1修正：句柄全宽度返回，避免32位截断（教训见 interop.md）
     auto* e = new VisionEngine();
-    return static_cast<int>(H(e)); // 32位截断风险说明见 interop.md —— 正式版改用 long long 句柄
+    return H(e);
 }
 
 VC_API void VC_Destroy(long long handle) {
